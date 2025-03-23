@@ -1,0 +1,237 @@
+/* ============================= */
+/* GENERAL STYLES */
+/* ============================= */
+
+/* Styles the entire page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #800000; /* Dark red background */
+    margin: 0;
+    padding: 0;
+    color: #ffffff; /* white */
+}
+
+/* ============================= */
+/* LOGIN PAGE */
+/* ============================= */
+
+/* Styles the login container (centered white box) */
+.login-container {
+    background-color: #fff; /* White background */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Styles the main heading (H1) */
+h1 {
+    color: #FFD700; /* Gold color */
+}
+
+/* Styles form groups (spacing for form fields) */
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+/* Styles labels for form fields */
+label {
+    font-weight: bold;
+    color: #2c2c2c; /* Dark text */
+}
+
+/* Styles text and password input fields */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* ============================= */
+/* BUTTON STYLES */
+/* ============================= */
+
+/* General Button Styling */
+button {
+    background-color: #FFD700; /* Gold */
+    color: #800000; /* Dark red text */
+    font-weight: bold;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #800000; /* Dark red text */
+}
+
+/* Back Button */
+.back-button {
+    display: inline-block;
+    background-color: #800000; /* Dark red */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Back button hover effect */
+.back-button:hover {
+    background-color: #660000; /* Darker red */
+}
+
+/* Dashboard Button */
+.dashboard-button {
+    display: inline-block;
+    background-color: #e6c200; /* Darker gold */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Dashboard button hover effect */
+.dashboard-button:hover {
+    background-color: #800000; /* Dark red text */
+}
+
+/* Upload Button */
+.upload-button {
+    background-color: #ff9900; /* Orange */
+    border: 2px solid #cc7a00;
+}
+
+/* Hover effect for Upload Button */
+.upload-button:hover {
+    background-color: #800000; /* Dark red text */
+    border-color: #995c00;
+}
+
+/* ============================= */
+/* DASHBOARD LAYOUT */
+/* ============================= */
+
+/* Styles the main dashboard container */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* Styles individual dashboard cards */
+.dashboard-card {
+    background-color: #b22222; /* Dark red */
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    margin: 1rem;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles the grid layout for dashboard items */
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ============================= */
+/* SIDEBAR STYLES */
+/* ============================= */
+
+/* Sidebar layout */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    background-color: #660000; /* Dark red */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+/* Sidebar links */
+.sidebar a {
+    color: #FFD700; /* Gold */
+    text-decoration: none;
+    font-size: 20px;
+    margin: 20px 0;
+    transition: 0.3s;
+}
+
+/* Sidebar link hover effect */
+.sidebar a:hover {
+    color: white;
+}
+
+/* ============================= */
+/* VIEW & RECEIPT BUTTONS */
+/* ============================= */
+
+/* View Receipt Button */
+.view-receipt {
+    background-color: #ff9900; /* Orange */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+/* View Receipt Button Hover */
+.view-receipt:hover {
+    background-color: #800000; /* Dark red text */
+}
+
+/* General button styling for receipt-related actions */
+button {
+    background-color: #ff9900; /* Orange */
+    color: white;
+    border: 2px solid #cc7a00;; /* Outline */
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #800000; /* Dark red text */
+    border: 2px solid #cc7a00;
+}
+
+/* View Button */
+.view-receipt {
+    background-color: #ff9900; /* Orange */
+    border: 2px solid #cc7a00;
+}
+
+/* Hover Effect for View Button */
+.view-receipt:hover {
+    background-color: #800000; /* Dark red text */
+    border-color: #cc7a00;
+}
