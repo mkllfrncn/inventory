@@ -188,6 +188,64 @@ button:hover {
 }
 
 /* ============================= */
+/* MEDICINES */
+/* ============================= */
+
+/* Adjust the input field size */
+input[type="text"], input[type="number"], input[type="date"] {
+    width: 60%; /* Reduce width to make it smaller */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Move the search bar above the form */
+.search-container {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.search-container input {
+    width: 50%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Ensure expiry and manufacturing date fields are visible */
+.date-fields {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+}
+
+.date-fields label {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.date-fields input {
+    flex: 2;
+}
+
+/* Improve the button styling */
+button.add-medicine {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 60%;
+}
+
+button.add-medicine:hover {
+    background-color: #e68900;
+}
+
+/* ============================= */
 /* VIEW & RECEIPT BUTTONS */
 /* ============================= */
 
