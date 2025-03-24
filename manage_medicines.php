@@ -1,77 +1,133 @@
 <?php
-session_start();
-require 'db.php';
+include 'db.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $medicine_name = $_POST['name'] ?? '';
+    $dosage = $_POST['dosage'] ?? '';
+    $stock = $_POST['stock'] ?? 0;
+    $expiry_date = $_POST['expiry_date'] ?? NULL;
+    $manufacturing_date = $_POST['manufacturing_date'] ?? NULL;
+    $dosage_form = $_POST['dosage_form'] ?? '';
+    $brand_name = $_POST['brand'] ?? '';
+    $batch_number = $_POST['batch_number'] ?? '';
+
+    $stmt = $mysqli->prepare("INSERT INTO medicines (name, dosage, stock, expiry_date, manufacturing_date, dosage_form, brand, batch_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssisssss", $medicine_name, $dosage, $stock, $expiry_date, $manufacturing_date, $dosage_form, $brand_name, $batch_number);
+    $stmt->execute();
+    header("Location: manage_medicines.php");
     exit();
 }
-
-// Handle form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $dosage = $_POST['dosage'];
-    $stock = $_POST['stock'];
-    $expiry_date = $_POST['expiry_date'];
-    $manufacturing_date = $_POST['manufacturing_date'];
-    $dosage_form = $_POST['dosage_form'];
-    $brand = $_POST['brand'];
-    $batch_number = $_POST['batch_number'];
-
-    if (!empty($name) && !empty($dosage) && !empty($stock) && !empty($expiry_date) && !empty($manufacturing_date) && !empty($dosage_form) && !empty($brand) && !empty($batch_number)) {
-        $stmt = $mysqli->prepare("INSERT INTO medicines (name, dosage, stock, expiry_date, manufacturing_date, dosage_form, brand, batch_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssisssss", $name, $dosage, $stock, $expiry_date, $manufacturing_date, $dosage_form, $brand, $batch_number);
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Medicine added successfully!'); window.location.href='manage_medicines.php';</script>";
-        } else {
-            echo "<script>alert('Error adding medicine: " . $stmt->error . "');</script>";
-        }
-        $stmt->close();
-    } else {
-        echo "<script>alert('Please fill in all fields.');</script>";
-    }
-}
-
-// Fetch all medicines
-$result = $mysqli->query("SELECT * FROM medicines");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Management</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-    <title>Manage Medicines</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #800000;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .date-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .date-container label, .date-container input {
+            width: 48%;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            background: white;
+            color: black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        .submit-btn {
+            background-color: #ff9800;
+            color: white;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 50%;
+            border-radius: 5px;
+        }
+        .submit-btn:hover {
+            background-color: darkorange;
+        }
+    </style>
+    <script>
+        function searchMedicine() {
+            let input = document.getElementById("search-bar").value.toLowerCase();
+            let table = document.getElementById("medicine-table");
+            let rows = table.getElementsByTagName("tr");
+            
+            for (let i = 1; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                let found = false;
+                
+                for (let cell of cells) {
+                    if (cell.innerText.toLowerCase().includes(input)) {
+                        found = true;
+                        break;
+                    }
+                }
+                rows[i].style.display = found ? "" : "none";
+            }
+        }
+    </script>
 </head>
 <body>
-
-    <div class="dashboard-container">
-        <h1>Medicine Management</h1>
-
-        <!-- Back to Dashboard Button -->
-        <a href="dashboard.php" class="back-button">⬅ Back to Dashboard</a>
-
-        <!-- Input Form -->
-        <form method="POST">
+    <div class="container">
+        <h2>Medicine Management</h2>
+        <a href="dashboard.php" class="back-button">&larr; Back to Dashboard</a>
+        
+        <input type="text" id="search-bar" class="search-bar" placeholder="Search medicines..." onkeyup="searchMedicine()">
+        
+        <form id="medicineForm" method="POST">
             <input type="text" name="name" placeholder="Medicine Name" required>
-            <input type="text" name="dosage" placeholder="Dosage (e.g., 500mg)" required>
-            <input type="number" name="stock" placeholder="Stock Quantity" required>
-            <label for="expiry_date">Expiry Date:</label>
-            <input type="date" name="expiry_date" required>
-            <label for="manufacturing_date">Manufacturing Date:</label>
-            <input type="date" name="manufacturing_date" required>
-            <input type="text" name="dosage_form" placeholder="Dosage Form (Tablet, Syrup, etc.)" required>
-            <input type="text" name="brand" placeholder="Brand Name" required>
-            <input type="text" name="batch_number" placeholder="Batch Number" required>
-            <button type="submit">Add Medicine</button>
+            <input type="text" name="dosage" placeholder="Dosage (e.g., 500mg)">
+            <input type="number" name="stock" placeholder="Stock Quantity">
+            
+            <div class="date-container">
+                <label>Expiry Date: <input type="date" name="expiry_date"></label>
+                <label>Manufacturing Date: <input type="date" name="manufacture_date"></label>
+            </div>
+            
+            <input type="text" name="form" placeholder="Dosage Form (Tablet, Syrup, etc.)">
+            <input type="text" name="brand" placeholder="Brand Name">
+            <input type="text" name="batch" placeholder="Batch Number">
+            <button type="submit" class="submit-btn">Save Medicine</button>
         </form>
 
-        <!-- Search Bar -->
-        <input type="text" id="searchMedicines" placeholder="Search medicines..." onkeyup="searchTable('searchMedicines', 'medicineTable')">
-
-        <!-- Medicine Table -->
-        <table id="medicineTable">
+        <table id="medicine-table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -85,21 +141,24 @@ $result = $mysqli->query("SELECT * FROM medicines");
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['name']) ?></td>
-                    <td><?= htmlspecialchars($row['dosage']) ?></td>
-                    <td><?= $row['stock'] ?></td>
-                    <td><b>Expiry:</b> <?= $row['expiry_date'] ?></td>
-                    <td><b>Manufactured:</b> <?= $row['manufacturing_date'] ?></td>
-                    <td><?= htmlspecialchars($row['dosage_form']) ?></td>
-                    <td><?= htmlspecialchars($row['brand']) ?></td>
-                    <td><?= htmlspecialchars($row['batch_number']) ?></td>
-                </tr>
-                <?php endwhile; ?>
+                <?php
+                $query = "SELECT * FROM medicines ORDER BY name";
+                $result = mysqli_query($mysqli, $query);
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>
+                        <td>{$row['name']}</td>
+                        <td>{$row['dosage']}</td>
+                        <td>{$row['stock']}</td>
+                        <td>{$row['expiry_date']}</td>
+                        <td>{$row['manufacturing_date']}</td>
+                        <td>{$row['dosage_form']}</td>
+                        <td>{$row['brand']}</td>
+                        <td>{$row['batch_number']}</td>
+                    </tr>";
+                }
+                ?>
             </tbody>
         </table>
     </div>
-
 </body>
 </html>
