@@ -1,0 +1,40 @@
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') NOT NULL
+);
+
+CREATE TABLE medicines (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    expiry_date DATE NOT NULL,
+    stock INT NOT NULL,
+    dosage VARCHAR(50) NOT NULL,
+    manufacturing_date DATE NULL,
+    dosage_form VARCHAR(50) NOT NULL,
+    brand VARCHAR(100) NOT NULL,
+    batch_number VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE equipments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    status VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE receipts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_type ENUM('medicine', 'equipment') NOT NULL,
+    item_id INT NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    request_file VARCHAR(255) NULL
+);
+
+CREATE TABLE faqs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL
+);
