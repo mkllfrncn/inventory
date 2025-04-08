@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
-    if ($password == $user['password']) {
+    if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         header("Location: dashboard.php");
         exit();
@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="password" name="password" placeholder="Password" required>
                 </div>
                 <div class="forgot">
-                    <a href="#">Forgot Your Password?</a>
+                    <a href="forgot_password.php">Forgot Your Password?</a>
                 </div>
                 <button class="login-button" type="submit">Login</button>
             </form>
