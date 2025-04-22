@@ -25,16 +25,3 @@ CREATE TABLE equipments (
     status VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE receipts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    item_type ENUM('medicine', 'equipment') NOT NULL,
-    item_id INT NOT NULL,
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    request_file VARCHAR(255) NULL
-);
-
-CREATE TABLE faqs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    question TEXT NOT NULL,
-    answer TEXT NOT NULL
-);
