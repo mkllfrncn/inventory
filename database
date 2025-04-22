@@ -10,7 +10,6 @@ CREATE TABLE medicines (
     name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     expiry_date DATE NOT NULL,
-    stock INT NOT NULL,
     dosage VARCHAR(50) NOT NULL,
     manufacturing_date DATE NULL,
     dosage_form VARCHAR(50) NOT NULL,
