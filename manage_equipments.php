@@ -164,5 +164,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </tbody>
         </table>
     </div>
+    <script>
+    function adjustQuantity(button, change) {
+        event.preventDefault(); // This ensures no default behavior happens
+        const quantitySpan = button.parentElement.querySelector('.adjustable-quantity');
+        let quantity = parseInt(quantitySpan.textContent);
+        quantity += change;
+        if (quantity < 0) quantity = 0;
+        quantitySpan.textContent = quantity;
+    }
+</script>
 </body>
 </html>
