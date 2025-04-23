@@ -118,12 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="date-container">
                 <label>Expiry Date: <input type="date" name="expiry_date"></label>
-                <label>Manufacturing Date: <input type="date" name="manufacture_date"></label>
+                <label>Manufacturing Date: <input type="date" name="manufacturing_date"></label>
             </div>
             
-            <input type="text" name="form" placeholder="Dosage Form (Tablet, Syrup, etc.)">
+            <input type="text" name="dosage_form" placeholder="Dosage Form (Tablet, Syrup, etc.)">
             <input type="text" name="brand" placeholder="Brand Name">
-            <input type="text" name="batch" placeholder="Batch Number">
+            <input type="text" name="batch_number" placeholder="Batch Number">
             <button type="submit" class="submit-btn">Save Medicine</button>
         </form>
 
