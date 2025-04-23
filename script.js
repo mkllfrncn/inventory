@@ -59,3 +59,43 @@ function searchTable(inputId, tableId) {
         rows[i].style.display = match ? "" : "none";
     }
 }
+
+// Function to adjust quantity on the dashboard only (no effect on manage equipments)
+function adjustQuantity(button, change) {
+    // Prevent the default behavior, ensuring no page scroll or form submission
+    button.addEventListener('click', function(e) {
+        e.preventDefault();  // Prevent any default action, including scrolling
+        
+        // Get the closest td element and locate the span with the adjustable quantity
+        const quantitySpan = button.closest("td").querySelector(".adjustable-quantity");
+
+        // Parse the current quantity as an integer
+        let quantity = parseInt(quantitySpan.textContent);
+        
+        // Apply the change: increment or decrement
+        quantity += change;
+
+        // Prevent negative values
+        if (quantity < 0) quantity = 0;
+
+        // Update the quantity displayed on the dashboard
+        quantitySpan.textContent = quantity;
+    });
+}
+
+// Function to ensure quantity adjustment is only applied on the dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Grab all the buttons for adjusting quantity
+    const buttons = document.querySelectorAll('.qty-btn');
+    
+    buttons.forEach(button => {
+        // Add event listener to each button
+        button.addEventListener('click', function(event) {
+            // Determine whether the button is + or -
+            const change = button.textContent === '+' ? 1 : -1;
+            
+            // Call adjustQuantity, passing the correct amount to increment or decrement
+            adjustQuantity(button, change);
+        });
+    });
+});
