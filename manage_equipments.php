@@ -2,6 +2,38 @@
 include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['remove'])) {
+        $id = $_POST['equipment_id'] ?? 0;
+        $stmt = $mysqli->prepare("DELETE FROM equipments WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        header("Location: manage_equipments.php");
+        exit();
+    }
+
+    if (isset($_POST['equipment_id']) && isset($_POST['status'])) {
+        $id = $_POST['equipment_id'];
+        $status = $_POST['status'];
+        $stmt = $mysqli->prepare("UPDATE equipments SET status = ? WHERE id = ?");
+        $stmt->bind_param("si", $status, $id);
+        $stmt->execute();
+        header("Location: manage_equipments.php");
+        exit();
+    }
+
+    if (isset($_POST['name']) && isset($_POST['quantity']) && isset($_POST['status'])) {
+        $equipment_name = $_POST['name'];
+        $quantity = $_POST['quantity'];
+        $status = $_POST['status'];
+        $stmt = $mysqli->prepare("INSERT INTO equipments (name, quantity, status) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $equipment_name, $quantity, $status);
+        $stmt->execute();
+        header("Location: manage_equipments.php");
+        exit();
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $equipment_name = $_POST['name'] ?? '';
     $quantity = $_POST['quantity'] ?? 0;
     $status = $_POST['status'] ?? 'Available';
@@ -32,7 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: bold;
             text-decoration: none;
             border-radius: 5px;
-            margin-bottom: 10px; /* Add margin to give space between button and search bar */
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
         .back-button:hover {
             background-color: darkorange;
@@ -42,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #800000;
             color: white;
             text-align: center;
+            padding: 20px;
         }
         .container {
             width: 80%;
@@ -51,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative; /* Added this to make button position relative to the container */
         }
         input {
             width: 90%;
@@ -125,8 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="container">
-        <h2>Equipment Management</h2>
         <a href="dashboard.php" class="back-button">&larr; Back to Dashboard</a>
+        <h2>Equipment Management</h2>
 
         <input type="text" id="search-bar" class="search-bar" placeholder="Search equipment..." onkeyup="searchEquipment()">
         
@@ -147,6 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Name</th>
                     <th>Quantity</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -154,10 +191,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $query = "SELECT * FROM equipments ORDER BY name";
                 $result = mysqli_query($mysqli, $query);
                 while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>
+                    echo "<tr data-id='{$row['id']}'>
                         <td>{$row['name']}</td>
                         <td>{$row['quantity']}</td>
-                        <td>{$row['status']}</td>
+                        <td>
+                            <select class='status-dropdown' data-id='{$row['id']}'>
+                                <option value='Available' " . ($row['status'] === 'Available' ? 'selected' : '') . ">Available</option>
+                                <option value='In Use' " . ($row['status'] === 'In Use' ? 'selected' : '') . ">In Use</option>
+                                <option value='Broken' " . ($row['status'] === 'Broken' ? 'selected' : '') . ">Broken</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class='remove-button' data-id='{$row['id']}' style='color:white; background:maroon; border:none; padding:5px 10px; border-radius:5px;'>Remove</button>
+                        </td>
                     </tr>";
                 }
                 ?>
@@ -165,14 +211,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </table>
     </div>
     <script>
-    function adjustQuantity(button, change) {
-        event.preventDefault(); // This ensures no default behavior happens
-        const quantitySpan = button.parentElement.querySelector('.adjustable-quantity');
-        let quantity = parseInt(quantitySpan.textContent);
-        quantity += change;
-        if (quantity < 0) quantity = 0;
-        quantitySpan.textContent = quantity;
-    }
+    document.querySelectorAll('.remove-button').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const id = this.dataset.id;
+            
+            // Confirmation alert before removal
+            const confirmed = confirm("Are you sure you want to remove this equipment?");
+            if (!confirmed) return; // If user cancels, stop the removal process
+
+            // Send the removal request to the server
+            fetch('update_equipment.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: action=remove&id=${id}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Equipment removed successfully!");
+                    document.querySelector(tr[data-id='${id}']).remove(); // Remove the row from the table
+                } else {
+                    alert("Failed to remove equipment. Please try again.");
+                }
+            })
+            .catch(error => {
+                alert("An error occurred. Please try again.");
+                console.error("Error removing equipment:", error);
+            });
+        });
+    });
 </script>
 </body>
 </html>
