@@ -17,140 +17,178 @@ if (!isset($_SESSION['user_id'])) {
     <div id="notification" style="display: none; position: fixed; top: 10px; right: 10px; background: #FFD700; color: #800000; padding: 15px; border-radius: 5px; font-weight: bold; box-shadow: 0px 2px 10px rgba(0,0,0,0.3);">
     </div>
     <style>
-        body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f5f5f5;
-}
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #f5f5f5;
+    }
 
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #800000;
-    width: 80px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 100px;
-    box-sizing: border-box;
-}
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #800000;
+        width: 80px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 100px;
+        box-sizing: border-box;
+    }
 
-.sidebar a {
-    color: yellow;
-    text-decoration: none;
-    font-size: 28px;
-    margin: 20px 0;
-    position: relative;
-}
+    .sidebar a {
+        color: yellow;
+        text-decoration: none;
+        font-size: 28px;
+        margin: 20px 0;
+        position: relative;
+    }
 
-.sidebar-logo {
-    height: 60px;
-    margin-bottom: 80px;
-}
+    .sidebar-logo {
+        height: 60px;
+        margin-bottom: 80px;
+    }
 
-.sidebar a.logout-btn {
-    margin-top: 200px;
-}
+    .sidebar a.logout-btn {
+        margin-top: 200px;
+    }
 
-.sidebar a:hover::after {
-    content: attr(data-label);
-    position: absolute;
-    left: 60px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #FFD700;
-    color: #800000;
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    white-space: nowrap;
-    font-weight: bold;
-}
+    .sidebar a:hover::after {
+        content: attr(data-label);
+        position: absolute;
+        left: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #FFD700;
+        color: #800000;
+        padding: 4px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        white-space: nowrap;
+        font-weight: bold;
+    }
 
-.logo-wrapper {
-    position: absolute;
-    top: 10px;
-}
+    .logo-wrapper {
+        position: absolute;
+        top: 10px;
+    }
 
-.sidebar-logo {
-    height: 60px;
-}
+    .sidebar-logo {
+        height: 60px;
+    }
 
-.header {
-    background-color: #800000;
-    color: white;
-    padding: 20px 35px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .header {
+        background-color: #800000;
+        color: white;
+        padding: 20px 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.header-time {
-    font-size: 16px;
-    color: #FFD700;
-    font-weight: bold;
-    left: 100%;
-}
+    .header-time {
+        font-size: 16px;
+        color: #FFD700;
+        font-weight: bold;
+        left: 100%;
+    }
 
-.header .title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #FFD700;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
+    .header .title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFD700;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 
-.dashboard-container {
-    margin-left: 100px;
-    padding: 30px;
-}
+    .dashboard-container {
+        margin-left: 100px;
+        padding: 30px;
+    }
 
-.dashboard-container h1 {
-    color: #800000;
-    font-size: 32px;
-}
+    .dashboard-container h1 {
+        color: #800000;
+        font-size: 32px;
+    }
 
-.footer {
-    text-align: right;
-    margin-top: 50px;
-    color: gray;
-    font-size: 14px;
-}
+    .footer {
+        text-align: right;
+        margin-top: 50px;
+        color: gray;
+        font-size: 14px;
+    }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: white;
+    }
 
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
 
-th {
-    background-color: #800000;
-    color: white;
-}
+    th {
+        background-color: #800000;
+        color: white;
+    }
 
-.btn {
-    padding: 6px 12px;
-    font-size: 14px;
-    color: white;
-    background-color: #800000;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+    .btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        color: white;
+        background-color: #800000;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-.btn:hover {
-    background-color: #a00000;
-}
+    .btn:hover {
+        background-color: #a00000;
+    }
+
+    @media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .dashboard-container, 
+    .dashboard-container table,
+    .dashboard-container table *,
+    .dashboard-container h2 {
+        visibility: visible;
+    }
+
+    .dashboard-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar,
+    .header,
+    .footer,
+    .btn,
+    th:last-child,
+    td:last-child {
+        display: none !important;
+    }
+
+    .dashboard-container h2 {
+        text-align: center;
+        margin-top: 20px;
+        color: #000;
+    }
+    }
+
         </style>
 </head>
 <body>
