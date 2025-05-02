@@ -1,7 +1,18 @@
 <?php
 include 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Delete individual medicine by ID
+if (isset($_POST['remove_id'])) {
+    $remove_id = $_POST['remove_id'];
+    $stmt = $mysqli->prepare("DELETE FROM medicines WHERE id = ?");
+    $stmt->bind_param("i", $remove_id);
+    $stmt->execute();
+    header("Location: manage_medicines.php");
+    exit();
+}
+
+// Add new medicine
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['remove_id']) && !isset($_POST['delete_expired'])) {
     $medicine_name = $_POST['name'] ?? '';
     $dosage = $_POST['dosage'] ?? '';
     $stock = $_POST['stock'] ?? 0;
@@ -106,58 +117,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="container">
-        <h2>Medicine Management</h2>
-        <a href="dashboard.php" class="back-button">&larr; Back to Dashboard</a>
+    <div style="text-align: left; margin-bottom: 10px;">
+    <a href="dashboard.php" class="back-button" style="
+        background-color: #800000;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+    ">&larr; Back to Dashboard</a>
+</div>
+<h2>Medicine Management</h2>
         
         <input type="text" id="search-bar" class="search-bar" placeholder="Search medicines..." onkeyup="searchMedicine()">
         
         <form id="medicineForm" method="POST">
-            <input type="text" name="name" placeholder="Medicine Name" required>
-            <input type="text" name="dosage" placeholder="Dosage (e.g., 500mg)">
-            <input type="number" name="stock" placeholder="Stock Quantity">
-            
-            <div class="date-container">
-                <label>Expiry Date: <input type="date" name="expiry_date"></label>
-                <label>Manufacturing Date: <input type="date" name="manufacturing_date"></label>
-            </div>
-            
-            <input type="text" name="dosage_form" placeholder="Dosage Form (Tablet, Syrup, etc.)">
-            <input type="text" name="brand" placeholder="Brand Name">
-            <input type="text" name="batch_number" placeholder="Batch Number">
-            <button type="submit" class="submit-btn">Save Medicine</button>
+        <input type="text" name="name" placeholder="Medicine Name" required>
+        <input type="number" name="stock" placeholder="Stock Quantity">
+        <input type="text" name="dosage" placeholder="Dosage (e.g., 500mg)">
+        <input type="text" name="dosage_form" placeholder="Dosage Form (Tablet, Syrup, etc.)">
+        <input type="text" name="brand" placeholder="Brand Name">
+        <div class="date-container">
+            <label>Manufacturing Date: <input type="date" name="manufacturing_date"></label>
+            <label>Expiry Date: <input type="date" name="expiry_date"></label>
+        </div>
+        <input type="text" name="batch_number" placeholder="Batch Number">
+        <div style="display: flex; justify-content: center; margin-top: 15px;">
+            <button type="submit" class="submit-btn" style="width: 60%;">Save Medicine</button>
+        </div>
         </form>
-
         <table id="medicine-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Dosage</th>
-                    <th>Stock</th>
-                    <th>Expiry Date</th>
-                    <th>Manufacturing Date</th>
-                    <th>Dosage Form</th>
-                    <th>Brand</th>
-                    <th>Batch Number</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $query = "SELECT * FROM medicines ORDER BY name";
-                $result = mysqli_query($mysqli, $query);
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>
-                        <td>{$row['name']}</td>
-                        <td>{$row['dosage']}</td>
-                        <td>{$row['stock']}</td>
-                        <td>{$row['expiry_date']}</td>
-                        <td>{$row['manufacturing_date']}</td>
-                        <td>{$row['dosage_form']}</td>
-                        <td>{$row['brand']}</td>
-                        <td>{$row['batch_number']}</td>
-                    </tr>";
-                }
-                ?>
-            </tbody>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Dosage</th>
+                <th>Dosage Form</th>
+                <th>Brand</th>
+                <th>Manufacturing Date</th>
+                <th>Expiry Date</th>
+                <th>Batch Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $query = "SELECT * FROM medicines ORDER BY name";
+            $result = mysqli_query($mysqli, $query);
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>
+                    <td>{$row['name']}</td>
+                    <td>{$row['stock']}</td>
+                    <td>{$row['dosage']}</td>
+                    <td>{$row['dosage_form']}</td>
+                    <td>{$row['brand']}</td>
+                    <td>{$row['manufacturing_date']}</td>
+                    <td>{$row['expiry_date']}</td>
+                    <td>{$row['batch_number']}</td>
+                    <td>
+                        <form method='POST' onsubmit=\"return confirm('Are you sure you want to remove this medicine?');\">
+                            <input type='hidden' name='remove_id' value='{$row['id']}'>
+                            <button type='submit' style='background-color: crimson; color: white; padding: 5px 10px; border: none; border-radius: 5px;'>Remove</button>
+                        </form>
+                    </td>
+                </tr>";
+            }
+            ?>
+        </tbody>
         </table>
     </div>
 </body>
