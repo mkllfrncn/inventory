@@ -1,15 +1,14 @@
 <?php
 include 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['remove'])) {
-        $id = $_POST['equipment_id'] ?? 0;
-        $stmt = $mysqli->prepare("DELETE FROM equipments WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        header("Location: manage_equipments.php");
-        exit();
-    }
+if (isset($_POST['remove_id'])) {
+    $remove_id = $_POST['remove_id'];
+    $stmt = $mysqli->prepare("DELETE FROM equipments WHERE id = ?");
+    $stmt->bind_param("i", $remove_id);
+    $stmt->execute();
+    header("Location: manage_equipments.php");
+    exit();
+}
 
     if (isset($_POST['equipment_id']) && isset($_POST['status'])) {
         $id = $_POST['equipment_id'];
@@ -31,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: manage_equipments.php");
         exit();
     }
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $equipment_name = $_POST['name'] ?? '';
@@ -202,7 +200,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </select>
                         </td>
                         <td>
-                            <button class='remove-button' data-id='{$row['id']}' style='color:white; background:maroon; border:none; padding:5px 10px; border-radius:5px;'>Remove</button>
+                            <form method='POST' onsubmit=\"return confirm('Are you sure you want to remove this medicine?');\">
+                            <input type='hidden' name='remove_id' value='{$row['id']}'>
+                            <button type='submit' style='background-color: crimson; color: white; padding: 5px 10px; border: none; border-radius: 5px;'>Remove</button>
+                        </form>
                         </td>
                     </tr>";
                 }
@@ -224,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             fetch('update_equipment.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: action=remove&id=${id}
+                body: remove=1&equipment_id=${id}
             })
             .then(response => response.json())
             .then(data => {
