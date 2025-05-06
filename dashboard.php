@@ -6,16 +6,20 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="script.js"></script>
     <meta charset="UTF-8">
     <title>StMediCare</title>
-    <div id="notification" style="display: none; position: fixed; top: 10px; right: 10px; background: #FFD700; color: #800000; padding: 15px; border-radius: 5px; font-weight: bold; box-shadow: 0px 2px 10px rgba(0,0,0,0.3);">
-    </div>
+    <!-- DASHBOARD -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SIDEBAR -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- NOTIFICATION -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="script.js"></script>
+
     <style>
     body {
         margin: 0;
@@ -74,10 +78,6 @@ if (!isset($_SESSION['user_id'])) {
         top: 10px;
     }
 
-    .sidebar-logo {
-        height: 60px;
-    }
-
     .header {
         background-color: #800000;
         color: white;
@@ -91,7 +91,6 @@ if (!isset($_SESSION['user_id'])) {
         font-size: 16px;
         color: #FFD700;
         font-weight: bold;
-        left: 100%;
     }
 
     .header .title {
@@ -108,11 +107,6 @@ if (!isset($_SESSION['user_id'])) {
         padding: 30px;
     }
 
-    .dashboard-container h1 {
-        color: #800000;
-        font-size: 32px;
-    }
-
     .footer {
         text-align: right;
         margin-top: 50px;
@@ -120,99 +114,79 @@ if (!isset($_SESSION['user_id'])) {
         font-size: 14px;
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        background-color: white;
-    }
-
-    th, td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: center;
-    }
-
-    th {
-        background-color: #800000;
-        color: white;
-    }
-
-    .btn {
-        padding: 6px 12px;
-        font-size: 14px;
-        color: white;
-        background-color: #800000;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #a00000;
-    }
-
     @media print {
-    body * {
-        visibility: hidden;
-    }
+        body * {
+            visibility: hidden;
+        }
 
-    .dashboard-container, 
-    .dashboard-container table,
-    .dashboard-container table *,
-    .dashboard-container h2 {
-        visibility: visible;
-    }
+        .dashboard-container,
+        .dashboard-container table,
+        .dashboard-container table *,
+        .dashboard-container h2 {
+            visibility: visible;
+        }
 
-    .dashboard-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
+        .dashboard-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-    .sidebar,
-    .header,
-    .footer,
-    .btn,
-    th:last-child,
-    td:last-child {
-        display: none !important;
-    }
+        .sidebar,
+        .header,
+        .footer,
+        .btn,
+        th:last-child,
+        td:last-child {
+            display: none !important;
+        }
 
-    .dashboard-container h2 {
-        text-align: center;
-        margin-top: 20px;
-        color: #000;
+        .dashboard-container h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #000;
+        }
     }
-    }
-
-        </style>
+    </style>
 </head>
 <body>
+
+<!-- Notification (Bootstrap Alert Style) -->
+<div id="notification" class="alert alert-warning alert-dismissible fade show position-fixed top-0 end-0 m-3 fw-bold shadow position-relative" style="display: none;">
+    <span id="notification-content"></span>
+</div>
 
 <div class="sidebar">
     <div class="logo-wrapper">
         <img src="logo.png" alt="Logo" class="sidebar-logo">
     </div>
-    <a href="manage_medicines.php" data-label="Medicines">💊</a>
-    <a href="manage_equipments.php" data-label="Equipments">🩺</a>
-    <a href="requisitions.php" data-label="Requisitions">🧾</a>
-    <a href="logout.php" data-label="Logout" class="logout-btn">🚪</a>
+    <a href="manage_medicines.php" data-label="Medicines">
+    <i class="bi bi-capsule"></i>
+    </a>
+    <a href="manage_equipments.php" data-label="Equipments">
+        <i class="bi bi-heart-pulse"></i>
+    </a>
+    <a href="requisitions.php" data-label="Requisitions">
+        <i class="bi bi-receipt"></i>
+    </a>
+    <a href="logout.php" data-label="Logout" class="logout-btn">
+        <i class="bi bi-box-arrow-right"></i>
+    </a>
 </div>
 
 <div class="header">
-    <div style="flex: 1;"></div> <!-- spacer on the left -->
+    <div></div>
     <div class="title">StMediCare</div>
     <div class="header-time" id="header-datetime">Loading time...</div>
 </div>
 
 <div class="dashboard-container">
-    <h2>Medicine Inventory</h2>
-    <table>
-        <thead>
+    <h2 class="text-danger">Medicine Inventory</h2>
+    <table class="table table-bordered table-striped bg-white mt-3">
+        <thead class="table-danger text-white">
             <tr>
                 <th>Name</th>
                 <th>Quantity</th>
@@ -229,21 +203,21 @@ if (!isset($_SESSION['user_id'])) {
                 <td><?= $row['name'] ?></td>
                 <td class="quantity-cell" data-id="<?= $row['id'] ?>"><?= $row['stock'] ?></td>
                 <td><?= $row['expiry_date'] ?></td>
-            <td>
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="medicine_id" value="<?= $row['id'] ?>">
-                    <button class="btn" name="decrease_medicine">-</button>
-                    <button class="btn" name="increase_medicine">+</button>
-                </form>
-            </td>
+                <td>
+                    <form method="POST" class="d-inline">
+                        <input type="hidden" name="medicine_id" value="<?= $row['id'] ?>">
+                        <button class="btn btn-danger btn-sm" name="decrease_medicine">-</button>
+                        <button class="btn btn-danger btn-sm" name="increase_medicine">+</button>
+                    </form>
+                </td>
             </tr>
         <?php endwhile; ?>
         </tbody>
     </table>
 
-    <h2 style="margin-top: 40px;">Equipment Inventory</h2>
-    <table>
-        <thead>
+    <h2 class="text-danger mt-5">Equipment Inventory</h2>
+    <table class="table table-bordered table-striped bg-white mt-3">
+        <thead class="table-danger text-white">
             <tr>
                 <th>Name</th>
                 <th>Quantity</th>
@@ -260,28 +234,28 @@ if (!isset($_SESSION['user_id'])) {
                 <td><?= $row['name'] ?></td>
                 <td class="quantity-cell" data-id="<?= $row['id'] ?>"><?= $row['quantity'] ?></td>
                 <td class="status-cell"><?= $row['status'] ?></td>
-            <td>
-                <form method="POST" style="display:inline;">
-                <input type="hidden" name="equipment_id" value="<?= $row['id'] ?>">
-                    <button class="btn" name="decrease_equipment" type="button">-</button>
-                    <button class="btn" name="increase_equipment" type="button">+</button>
-                    <button class="btn" name="edit_status" type="button">Edit Status</button>
-                </form>
-            </td>
+                <td>
+                    <form method="POST" class="d-inline">
+                        <input type="hidden" name="equipment_id" value="<?= $row['id'] ?>">
+                        <button class="btn btn-danger btn-sm" name="decrease_equipment" type="button">-</button>
+                        <button class="btn btn-danger btn-sm" name="increase_equipment" type="button">+</button>
+                        <button class="btn btn-secondary btn-sm" name="edit_status" type="button">Edit Status</button>
+                    </form>
+                </td>
             </tr>
         <?php endwhile; ?>
         </tbody>
     </table>
 
     <div class="footer">
-        <button class="btn" onclick="window.print()">Print Inventory</button>
+        <button class="btn btn-outline-danger" onclick="window.print()">Print Inventory</button>
         <br><br>
         <span id="datetime"></span>
     </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     function updateDateTime() {
         const now = new Date();
         const date = now.toLocaleDateString('en-US', {
@@ -297,12 +271,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         const full = `${date} ${time}`;
-
-        const footerDT = document.getElementById('datetime');
-        const headerDT = document.getElementById('header-datetime');
-
-        if (footerDT) footerDT.innerText = full;
-        if (headerDT) headerDT.innerText = full;
+        document.getElementById('datetime').innerText = full;
+        document.getElementById('header-datetime').innerText = full;
     }
 
     setInterval(updateDateTime, 1000);
@@ -310,20 +280,18 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-    <script>
+<script>
 document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('click', function(e) {
+    form.addEventListener('click', function (e) {
         const btn = e.target;
         if (btn.name === 'decrease_equipment' || btn.name === 'increase_equipment') {
             e.preventDefault();
-
             const row = btn.closest('tr');
             const quantityCell = row.querySelector('.quantity-cell');
             let currentQty = parseInt(quantityCell.textContent);
-
             if (btn.name === 'decrease_equipment') {
                 if (currentQty > 0) quantityCell.textContent = currentQty - 1;
-            } else if (btn.name === 'increase_equipment') {
+            } else {
                 quantityCell.textContent = currentQty + 1;
             }
         }
@@ -333,48 +301,40 @@ document.querySelectorAll('form').forEach(form => {
 
 <script>
 document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('click', function(e) {
+    form.addEventListener('click', function (e) {
         const btn = e.target;
         if (btn.name === 'edit_status') {
             e.preventDefault();
-
             const row = btn.closest('tr');
             const statusCell = row.querySelector('.status-cell');
-
             const currentStatus = statusCell.textContent.trim();
-            const nextStatus = getNextStatus(currentStatus);
-            statusCell.textContent = nextStatus;
+            const statuses = ["Available", "In Use", "Broken"];
+            const index = statuses.indexOf(currentStatus);
+            statusCell.textContent = statuses[(index + 1) % statuses.length];
         }
     });
-
-    function getNextStatus(current) {
-        const statuses = ["Available", "In Use", "Broken"];
-        const index = statuses.indexOf(current);
-        return statuses[(index + 1) % statuses.length];
-    }
 });
 </script>
 
 <script>
 document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         const btn = e.submitter;
         if (btn.name === 'decrease_medicine' || btn.name === 'increase_medicine') {
-            e.preventDefault(); // Stop form from submitting
-
+            e.preventDefault();
             const row = btn.closest('tr');
             const quantityCell = row.querySelector('.quantity-cell');
             let currentQty = parseInt(quantityCell.textContent);
-
             if (btn.name === 'decrease_medicine') {
                 if (currentQty > 0) quantityCell.textContent = currentQty - 1;
-            } else if (btn.name === 'increase_medicine') {
+            } else {
                 quantityCell.textContent = currentQty + 1;
             }
         }
     });
 });
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
